@@ -1,6 +1,6 @@
 {
   "name": "solveos-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Install the solveOS problem-solving framework as slash commands, agents, and hooks into AI coding assistants",
   "type": "module",
   "bin": {
@@ -12,7 +12,15 @@
     "test": "tsx --test tests/state-machine.test.ts tests/artifacts.test.ts tests/templates.test.ts tests/security.test.ts tests/wave-executor.test.ts tests/hooks.test.ts tests/runtime-adapters.test.ts",
     "test:coverage": "c8 --check-coverage --lines 70 --reporter text --reporter lcov tsx --test tests/state-machine.test.ts tests/artifacts.test.ts tests/templates.test.ts tests/security.test.ts tests/wave-executor.test.ts tests/hooks.test.ts tests/runtime-adapters.test.ts",
     "clean": "rm -rf dist",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t0k1dev/solveos-cli.git"
+  },
+  "homepage": "https://github.com/t0k1dev/solveos-cli#readme",
+  "bugs": {
+    "url": "https://github.com/t0k1dev/solveos-cli/issues"
   },
   "engines": {
     "node": ">= 20.0.0"
@@ -21,7 +29,9 @@
     "dist/",
     "commands/",
     "agents/",
-    "templates/"
+    "templates/",
+    "README.md",
+    "LICENSE"
   ],
   "keywords": [
     "solveos",
@@ -32,7 +42,10 @@
     "plan-brief",
     "opencode",
     "claude-code",
-    "cursor"
+    "cursor",
+    "gemini-cli",
+    "problem-solving",
+    "workflow"
   ],
   "author": "t0k1dev",
   "license": "MIT",
