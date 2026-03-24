@@ -14,6 +14,9 @@ import { fileURLToPath } from "node:url";
 import { readdir } from "node:fs/promises";
 import { detectRuntime } from "../lib/runtime-detect.js";
 import { opencode } from "../lib/runtime-adapters/opencode.js";
+import { claudeCode } from "../lib/runtime-adapters/claude-code.js";
+import { cursor } from "../lib/runtime-adapters/cursor.js";
+import { gemini } from "../lib/runtime-adapters/gemini-cli.js";
 import { initProject, projectExists } from "../lib/artifacts.js";
 import type { Runtime, RuntimeAdapter } from "../types.js";
 
@@ -32,7 +35,9 @@ const PACKAGE_ROOT = resolve(__dirname, "..", "..");
 
 const ADAPTERS: Partial<Record<Runtime, RuntimeAdapter>> = {
   opencode,
-  // claude-code, cursor, gemini adapters added in Phase 4
+  "claude-code": claudeCode,
+  cursor,
+  gemini,
 };
 
 // ---------------------------------------------------------------------------
@@ -97,8 +102,7 @@ async function main(): Promise<void> {
   const adapter = ADAPTERS[runtimeName];
   if (!adapter) {
     console.log(`  Runtime "${runtimeName}" is not yet supported.`);
-    console.log("  Currently supported: opencode");
-    console.log("  Claude Code, Cursor, and Gemini CLI support coming in Phase 4.");
+    console.log("  Currently supported: opencode, claude-code, cursor, gemini");
     console.log("");
     process.exit(1);
   }
