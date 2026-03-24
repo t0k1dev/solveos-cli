@@ -30,6 +30,12 @@ It does **not** replace your coding assistant. It adds structure on top of it.
 ### 1. Install
 
 ```bash
+npm i solveos-cli
+```
+
+Or run without installing:
+
+```bash
 npx solveos-cli@latest
 ```
 
