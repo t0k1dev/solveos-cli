@@ -172,6 +172,101 @@ export interface PlanBrief {
 }
 
 // ---------------------------------------------------------------------------
+// Wave Executor
+// ---------------------------------------------------------------------------
+
+/** Status of an individual work unit. */
+export type WorkUnitStatus = "pending" | "in_progress" | "completed" | "failed" | "skipped";
+
+/**
+ * An atomic unit of work within the Build phase.
+ * Each unit maps to at least one success criterion and can declare
+ * dependencies on other units.
+ */
+export interface WorkUnit {
+  /** Unique identifier within this execution plan (e.g., "unit-1"). */
+  id: string;
+  /** Human-readable name. */
+  name: string;
+  /** What this unit does — detailed enough for an agent to execute. */
+  description: string;
+  /** IDs of units that must complete before this one can start. */
+  depends_on: string[];
+  /** Which success criteria from the Plan Brief this unit verifies. */
+  criteria: string[];
+  /** Current execution status. */
+  status: WorkUnitStatus;
+  /** Output summary after execution (filled in by the executor). */
+  summary?: string;
+  /** Error message if the unit failed. */
+  error?: string;
+  /** Whether this was discovered during execution (not in original decomposition). */
+  discovered?: boolean;
+}
+
+/**
+ * A wave — a group of independent work units that can execute in parallel.
+ * All units in a wave have their dependencies satisfied by prior waves.
+ */
+export interface Wave {
+  /** Wave number (1-indexed). */
+  number: number;
+  /** IDs of work units in this wave. */
+  unit_ids: string[];
+  /** Wave status: pending until all units start, completed when all finish. */
+  status: "pending" | "in_progress" | "completed" | "failed";
+}
+
+/**
+ * The complete wave execution plan for a Build phase.
+ * Produced by decomposition + dependency analysis + wave grouping.
+ */
+export interface WaveExecutionPlan {
+  /** All work units. */
+  units: WorkUnit[];
+  /** Waves (ordered by execution sequence). */
+  waves: Wave[];
+  /** Granularity setting used for decomposition. */
+  granularity: Granularity;
+  /** Whether this plan has a single unit (bypasses wave overhead). */
+  single_unit: boolean;
+  /** Timestamp of plan creation. */
+  created_at: string;
+}
+
+/**
+ * Result of executing a wave execution plan.
+ */
+export interface WaveExecutionResult {
+  /** Overall status. */
+  status: "completed" | "partial" | "failed";
+  /** Number of units completed. */
+  units_completed: number;
+  /** Total number of units. */
+  units_total: number;
+  /** Discovered tasks added during execution. */
+  discovered_tasks: number;
+  /** Per-wave summaries. */
+  wave_summaries: WaveSummary[];
+  /** Completion timestamp. */
+  completed_at: string;
+}
+
+/**
+ * Summary of a single wave's execution.
+ */
+export interface WaveSummary {
+  /** Wave number. */
+  wave_number: number;
+  /** Units that completed successfully. */
+  completed: string[];
+  /** Units that failed. */
+  failed: string[];
+  /** Units that were skipped (due to dependency failures). */
+  skipped: string[];
+}
+
+// ---------------------------------------------------------------------------
 // Runtime Adapter
 // ---------------------------------------------------------------------------
 
