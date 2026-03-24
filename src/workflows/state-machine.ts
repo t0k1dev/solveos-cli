@@ -10,7 +10,7 @@
  */
 
 import { CycleState } from "../types.js";
-import type { CycleStateData, GateName, StateTransition } from "../types.js";
+import type { CycleStateData, GateName, StateTransition, TransitionLogEntry } from "../types.js";
 
 // ---------------------------------------------------------------------------
 // Transition Map
@@ -218,8 +218,22 @@ export function transition(
     }
   }
 
-  // Build updated state
+  // Build transition log entry
   const now = new Date().toISOString();
+  const logEntry: TransitionLogEntry = {
+    from,
+    to: target,
+    at: now,
+  };
+  // Record the first gate skipped (if any) on the log entry
+  if (gatesSkipped.length > 0) {
+    logEntry.gate_skipped = gatesSkipped[0];
+  }
+  if (gateCompleted) {
+    logEntry.gate_completed = gateCompleted;
+  }
+
+  // Build updated state
   const updatedState: CycleStateData = {
     ...stateData,
     current_state: target,
@@ -228,6 +242,7 @@ export function transition(
       ? [...stateData.gates_completed, gateCompleted]
       : [...stateData.gates_completed],
     plan_validation_passes: planValidationPasses,
+    transitions_log: [...(stateData.transitions_log ?? []), logEntry],
     updated_at: now,
   };
 
@@ -238,6 +253,7 @@ export function transition(
     updatedState.gates_completed = [];
     updatedState.plan_validation_passes = 0;
     updatedState.blockers = [];
+    updatedState.transitions_log = [];
   }
 
   return {
@@ -278,6 +294,7 @@ export function createInitialState(cycleNumber: number = 1): CycleStateData {
     gates_completed: [],
     plan_validation_passes: 0,
     blockers: [],
+    transitions_log: [],
     created_at: now,
     updated_at: now,
   };

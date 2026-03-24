@@ -16,6 +16,9 @@ import {
   readBrief,
   writeBrief,
   archiveCycle,
+  writeResearch,
+  writeValidation,
+  writeReview,
 } from "../src/lib/artifacts.js";
 import { CycleState } from "../src/types.js";
 import type { Config, CycleStateData, PlanBrief } from "../src/types.js";
@@ -98,22 +101,34 @@ async function run(): Promise<void> {
   assert(state !== null, "State exists after init");
   assert(state!.current_state === CycleState.INIT, "Initial state is INIT");
   assert(state!.cycle_number === 1, "Cycle number is 1");
+  assert(Array.isArray(state!.transitions_log), "Initial state has transitions_log array");
+  assert(state!.transitions_log.length === 0, "Initial transitions_log is empty");
 
   const updatedState: CycleStateData = {
     ...state!,
     current_state: CycleState.BUILDING,
     gates_skipped: ["RESEARCH", "PLAN_VALIDATION"],
+    transitions_log: [
+      { from: CycleState.INIT, to: CycleState.PLANNING, at: "2026-03-23T10:00:00Z", gate_skipped: "RESEARCH" },
+      { from: CycleState.PLANNING, to: CycleState.BUILDING, at: "2026-03-23T10:30:00Z", gate_skipped: "PLAN_VALIDATION" },
+    ],
     updated_at: new Date().toISOString(),
   };
   await writeState(tmpDir, updatedState);
   const reReadState = await readState(tmpDir);
   assert(reReadState!.current_state === CycleState.BUILDING, "State updated to BUILDING");
   assert(reReadState!.gates_skipped.length === 2, "2 gates skipped");
+  assert(reReadState!.transitions_log.length === 2, "Transitions log has 2 entries after round-trip");
+  assert(reReadState!.transitions_log[0].gate_skipped === "RESEARCH", "First log entry has skipped gate");
+  assert(reReadState!.transitions_log[1].from === CycleState.PLANNING, "Second log entry from is PLANNING");
 
   // STATE.md is human-readable
   const stateContent = await readFile(join(tmpDir, ".solveos", "STATE.md"), "utf-8");
   assert(stateContent.includes("# Cycle 1"), "STATE.md has human-readable heading");
   assert(stateContent.includes("**Current State:** BUILDING"), "STATE.md shows current state");
+  assert(stateContent.includes("## Transitions Log"), "STATE.md has Transitions Log section");
+  assert(stateContent.includes("INIT"), "Transitions Log table includes INIT");
+  assert(stateContent.includes("PLANNING"), "Transitions Log table includes PLANNING");
 
   // readBrief / writeBrief
   console.log("\nreadBrief / writeBrief:");
@@ -143,6 +158,46 @@ async function run(): Promise<void> {
   const rawBrief = await readBrief(tmpDir);
   assert(rawBrief!.includes("# Custom Brief"), "Raw string brief works");
 
+  // writeResearch
+  console.log("\nwriteResearch:");
+  await writeResearch(tmpDir, "database-latency", "## Research Summary\n\nDynamoDB is faster.");
+  assert(
+    await exists(join(tmpDir, ".solveos", "research", "database-latency-research.md")),
+    "Research file created with correct name"
+  );
+  const researchContent = await readFile(
+    join(tmpDir, ".solveos", "research", "database-latency-research.md"),
+    "utf-8"
+  );
+  assert(researchContent.includes("DynamoDB is faster"), "Research file has correct content");
+
+  // writeValidation
+  console.log("\nwriteValidation:");
+  await writeValidation(tmpDir, "plan-validation-1.md", "## Plan Validation Log — Pass 1\n\nAll good.");
+  assert(
+    await exists(join(tmpDir, ".solveos", "validations", "plan-validation-1.md")),
+    "Validation file created"
+  );
+
+  await writeValidation(tmpDir, "build-validation.md", "## Build Validation Report\n\nAll criteria pass.");
+  assert(
+    await exists(join(tmpDir, ".solveos", "validations", "build-validation.md")),
+    "Build validation file created"
+  );
+
+  // writeReview
+  console.log("\nwriteReview:");
+  await writeReview(tmpDir, "cycle-1-review.md", "## Post-Ship Review — Cycle 1\n\nGreat results.");
+  assert(
+    await exists(join(tmpDir, ".solveos", "reviews", "cycle-1-review.md")),
+    "Review file created"
+  );
+  const reviewContent = await readFile(
+    join(tmpDir, ".solveos", "reviews", "cycle-1-review.md"),
+    "utf-8"
+  );
+  assert(reviewContent.includes("Great results"), "Review file has correct content");
+
   // archiveCycle
   console.log("\narchiveCycle:");
   await writeBrief(tmpDir, brief); // Restore brief for archival
@@ -150,7 +205,23 @@ async function run(): Promise<void> {
   assert(await exists(join(tmpDir, ".solveos", "history", "cycle-1")), "Archive dir created");
   assert(await exists(join(tmpDir, ".solveos", "history", "cycle-1", "BRIEF.md")), "BRIEF.md archived");
   assert(await exists(join(tmpDir, ".solveos", "history", "cycle-1", "STATE.md")), "STATE.md archived");
+  assert(
+    await exists(join(tmpDir, ".solveos", "history", "cycle-1", "validations")),
+    "Validations dir archived"
+  );
   assert((await readBrief(tmpDir)) === null, "BRIEF.md cleared after archive");
+
+  // Reviews persist after archive (not cleared)
+  assert(
+    await exists(join(tmpDir, ".solveos", "reviews", "cycle-1-review.md")),
+    "Reviews persist after archive"
+  );
+
+  // Research persists after archive
+  assert(
+    await exists(join(tmpDir, ".solveos", "research", "database-latency-research.md")),
+    "Research persists after archive"
+  );
 
   await teardown();
 

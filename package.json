@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx",
+    "test": "tsx --test tests/state-machine.test.ts tests/artifacts.test.ts tests/templates.test.ts",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },

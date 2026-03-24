@@ -120,6 +120,15 @@ export type GateName =
   | "REVIEW_PRE_SHIP"
   | "REVIEW_POST_SHIP";
 
+/** A single entry in the transitions log — records every state change. */
+export interface TransitionLogEntry {
+  from: CycleState;
+  to: CycleState;
+  at: string;
+  gate_skipped?: GateName;
+  gate_completed?: GateName;
+}
+
 /** Structured data tracked in .solveos/STATE.md. */
 export interface CycleStateData {
   current_state: CycleState;
@@ -128,6 +137,7 @@ export interface CycleStateData {
   gates_completed: GateName[];
   plan_validation_passes: number;
   blockers: string[];
+  transitions_log: TransitionLogEntry[];
   created_at: string;
   updated_at: string;
 }

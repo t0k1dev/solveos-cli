@@ -119,6 +119,7 @@ export async function initProject(projectDir: string): Promise<void> {
       gates_completed: [],
       plan_validation_passes: 0,
       blockers: [],
+      transitions_log: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -233,6 +234,20 @@ function renderStateMd(state: CycleStateData): string {
     lines.push("## Blockers");
     for (const b of state.blockers) {
       lines.push(`- ${b}`);
+    }
+    lines.push("");
+  }
+
+  if (state.transitions_log && state.transitions_log.length > 0) {
+    lines.push("## Transitions Log");
+    lines.push("");
+    lines.push("| # | From | To | At | Gate Skipped | Gate Completed |");
+    lines.push("|---|------|----|----|--------------|----------------|");
+    for (let i = 0; i < state.transitions_log.length; i++) {
+      const entry = state.transitions_log[i];
+      const skipped = entry.gate_skipped ?? "—";
+      const completed = entry.gate_completed ?? "—";
+      lines.push(`| ${i + 1} | ${entry.from} | ${entry.to} | ${entry.at} | ${skipped} | ${completed} |`);
     }
     lines.push("");
   }
