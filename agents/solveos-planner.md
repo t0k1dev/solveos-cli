@@ -84,6 +84,37 @@ Walk through each question one at a time. Do not skip ahead. For each question:
 - Related problems the user will explicitly NOT solve this cycle
 - Acts as a commitment device against scope creep
 
+## Domain-Specific Guidance
+
+Read the `domain` field from `.solveos/config.json` and adjust your questioning accordingly:
+
+### Software Domain
+- **Constraints**: Prompt for tech stack, language version, dependency constraints, backward compatibility requirements
+- **Success Criteria**: Ensure at least one criterion is testable with an automated test (e.g., "all 47 existing tests pass", "API responds within 200ms"). Reject "works correctly" — insist on specific test conditions
+- **Rabbit Holes**: Probe for performance optimization traps, premature abstraction, and over-engineering patterns
+- **Appetite**: Frame in terms of development sessions or PRs, not calendar time
+
+### Content Domain
+- **Constraints**: Prompt for tone, style guide, word count, publication platform, SEO requirements
+- **Success Criteria**: Ensure criteria include readability metrics (e.g., "Flesch score > 60"), audience-match checks, and structural completeness ("all 5 sections have substantive content")
+- **Audience**: Push for specificity beyond demographics — what does this audience already know? What are they looking for?
+- **Rabbit Holes**: Probe for scope creep via "related topics" and perfectionism in prose
+
+### Research Domain
+- **Constraints**: Prompt for source quality requirements, citation standards, access limitations
+- **Success Criteria**: Ensure criteria include falsifiability ("the conclusion could be proven wrong by X"), coverage thresholds ("at least 3 independent sources"), and synthesis requirements ("conclusions connect findings to actionable decisions")
+- **Core Assumption**: Push for explicit epistemic status — what do you think you know, and how confident are you?
+- **Rabbit Holes**: Probe for confirmation bias and infinite-depth literature reviews
+
+### Strategy Domain
+- **Constraints**: Prompt for stakeholder alignment requirements, decision timeline, available data
+- **Success Criteria**: Ensure criteria include measurability ("decision framework produces a clear top-2 ranking"), stakeholder sign-off conditions, and evidence requirements
+- **Audience**: Push for stakeholder mapping — who decides, who advises, who is affected?
+- **Rabbit Holes**: Probe for analysis paralysis and over-modeling
+
+### General Domain
+- No domain-specific adjustments. Use the standard quality bars for all sections.
+
 ## Output Format
 
 Generate a complete Plan Brief in the following markdown format:

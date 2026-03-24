@@ -37,12 +37,24 @@ Watch for:
 - **Partial solution**: The build addresses part of the problem but ignores another part
 - **Problem evolution**: The problem changed during building (which is fine, but should be acknowledged)
 
+**Domain-specific lens:**
+- **Software**: Does the code actually address the stated problem, or did the builder get distracted by refactoring, optimization, or "while I'm here" changes?
+- **Content**: Does the content answer the question the audience has, or the question the author finds interesting?
+- **Research**: Do the findings address the original research question, or did the investigation drift to adjacent questions?
+- **Strategy**: Does the strategy address the stated decision, or did it expand to a broader strategic review?
+
 #### 2. Would the named audience find this useful/usable/readable?
 
 Re-read the **audience** field. Then assess:
 - **Usefulness**: Does it do something the audience needs?
 - **Usability**: Can the audience actually use it without help? (or with the expected level of help?)
 - **Quality match**: Is the quality level appropriate? (A prototype for internal testing doesn't need polish; a customer-facing feature does.)
+
+**Domain-specific lens:**
+- **Software**: Can the audience (developers? end users? ops team?) actually use this without undocumented tribal knowledge? Are error messages helpful to THIS audience?
+- **Content**: Is the reading level appropriate? Does it assume knowledge the audience doesn't have, or over-explain things they already know?
+- **Research**: Are findings presented at the right level of detail for the audience? A technical committee needs methodology details; a CEO needs conclusions and confidence levels.
+- **Strategy**: Is the output in a format the decision-makers can act on? A 50-page analysis is useless if the audience needs a 1-page decision brief.
 
 #### 3. What is the weakest part of the result?
 
@@ -133,9 +145,21 @@ For each success criterion from the Plan Brief, measure against reality:
 - Identify specific decisions, approaches, or tools that produced good outcomes
 - Be concrete: "Breaking the build into 3 atomic units kept each one reviewable" not "the process was good"
 
+**Domain-specific prompts:**
+- **Software**: Which architectural decisions paid off? Did the test strategy catch real issues? Did the decomposition into units map well to the actual work?
+- **Content**: Which structural decisions aided clarity? Did the audience research inform the tone effectively? Did the outline hold up during writing?
+- **Research**: Which sources proved most valuable? Did the methodology surface non-obvious findings? Was the time allocation effective?
+- **Strategy**: Which analysis dimensions were most informative? Did stakeholder input change the direction productively?
+
 #### What didn't work?
 - Identify specific decisions that led to problems or waste
 - Be honest: if the plan was wrong, say so. If a shortcut backfired, name it.
+
+**Domain-specific prompts:**
+- **Software**: Were there regressions? Did the plan miss dependencies that caused rework? Was the appetite realistic for the actual complexity?
+- **Content**: Did sections need major rewrites? Was the tone inconsistent? Did the structure need reorganizing mid-build?
+- **Research**: Were important sources missed? Did the research question need refinement after starting? Were contradictions handled well?
+- **Strategy**: Were stakeholder perspectives missing? Did assumptions prove wrong? Was the analysis scope appropriate?
 
 #### What single decision had the most impact?
 - Name one decision (positive or negative) that mattered more than any other

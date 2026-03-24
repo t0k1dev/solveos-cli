@@ -104,29 +104,38 @@ When a unit fails within a wave:
 
 ### Handling Domain Differences
 
+Read the `domain` field from `.solveos/config.json` and adjust decomposition, execution, and verification per domain:
+
 **Software domain:**
-- Each unit produces an atomic git commit
-- Commit messages reference the unit and criterion
-- Run tests after each unit if tests exist
-- Follow existing code patterns and conventions
+- **Decomposition**: Break by functional boundary (one feature, one module, one endpoint per unit). Prefer units that map to single files or small file groups.
+- **Execution**: Each unit produces an atomic git commit. Commit messages reference the unit ID and the criterion it serves (e.g., `unit-3: add input validation — criterion 2`). Run tests after each unit if tests exist. Follow existing code patterns and conventions — read the codebase before writing.
+- **Verification**: Run the test suite after each unit. If a unit introduces a regression, fix it before proceeding. Check that linting/compilation passes.
+- **Wave sizing**: Prefer smaller waves (2-4 units) to keep feedback loops tight. A failed unit in a large wave cascades more.
+- **Discovered tasks**: New dependencies, missing type definitions, needed refactors to support the change — these are common discovered tasks. Execute if they serve a criterion; defer if they're "nice to have."
 
 **Content domain:**
-- Each unit produces a section or draft
-- Draft → edit → polish cycle within each unit
-- Match existing tone and style
+- **Decomposition**: Break by section or content piece. Each unit produces one complete section, not a partial draft. Outline first, then fill — don't write linearly.
+- **Execution**: Draft → edit → polish cycle within each unit. Match existing tone and style from reference materials. Check readability after each section (sentence length, paragraph density, jargon).
+- **Verification**: Read each section aloud (mentally). Does it flow? Does it match the stated audience's knowledge level? Are transitions between sections smooth?
+- **Wave sizing**: Content often has linear dependencies (section 2 references section 1). Plan waves accordingly — truly independent sections (e.g., sidebar content, appendix) can parallelize.
+- **Discovered tasks**: Missing research, needed illustrations, glossary terms — common in content work.
 
 **Research domain:**
-- Each unit answers a specific sub-question
-- Cite sources
-- Synthesize findings
+- **Decomposition**: Break by sub-question or source cluster. Each unit answers one specific sub-question with cited evidence. Synthesis is a separate final unit.
+- **Execution**: Each unit gathers evidence, evaluates source quality, and produces findings with citations. Maintain a running "contradictions" list — findings that conflict with each other need explicit resolution.
+- **Verification**: For each finding, verify: Is the source credible? Is the evidence specific (not vague)? Does the conclusion follow from the evidence? Are limitations acknowledged?
+- **Wave sizing**: Source gathering can parallelize heavily. Synthesis depends on all gathering units — plan it as the final wave.
+- **Discovered tasks**: New sub-questions, contradictory findings requiring additional sources, methodology questions.
 
 **Strategy domain:**
-- Each unit produces analysis or recommendation
-- Support with evidence
-- Consider stakeholder perspectives
+- **Decomposition**: Break by analysis dimension (market, competitor, stakeholder, financial) or by option being evaluated. Each unit produces one complete analysis component.
+- **Execution**: Each unit produces analysis or recommendation supported by evidence. Consider all stated stakeholder perspectives. Make trade-offs explicit — every option has downsides; hiding them is dishonest.
+- **Verification**: For each analysis component, verify: Is it supported by evidence? Does it consider the stated stakeholders? Are assumptions explicit? Would a skeptical reader find this credible?
+- **Wave sizing**: Different analysis dimensions can parallelize. Synthesis and recommendation units depend on analysis units.
+- **Discovered tasks**: Missing stakeholder perspectives, data gaps requiring research, assumption challenges.
 
 **General domain:**
-- Standard decomposition with no domain-specific adjustments
+- Standard decomposition with no domain-specific adjustments. Use the core principles (atomic, verifiable, independent, traceable) for all units.
 
 ## Output Format
 

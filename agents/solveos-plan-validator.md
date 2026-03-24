@@ -160,6 +160,37 @@ Write a Plan Validation Log using this structure:
 - [ ] Needs escalation — fundamental issues require research or rethink
 ```
 
+## Domain-Specific Validation Concerns
+
+Read the `domain` field from `.solveos/config.json` and apply additional validation checks per domain:
+
+### Software Domain
+- **Success criteria**: Every criterion should be verifiable with an automated test, a manual test procedure, or a measurable metric. Reject subjective criteria like "clean code" or "good architecture" unless they reference specific standards (e.g., "follows existing repository patterns", "lint passes with zero warnings").
+- **Constraints**: Check for missing technical constraints — language version, dependency restrictions, backward compatibility, platform targets, minimum supported versions. If the brief mentions "performance" anywhere, demand specific thresholds.
+- **Feasibility**: Cross-reference the appetite against the scope. A plan with 8 success criteria and a 2-hour appetite is likely infeasible. Flag it.
+- **Rabbit holes**: Ensure at least one rabbit hole addresses premature abstraction or over-engineering. These are the most common traps in software projects.
+
+### Content Domain
+- **Success criteria**: Ensure criteria include at least one audience-verifiable metric (readability score, word count target, structural completeness). "Well-written" is not a criterion.
+- **Constraints**: Check for missing editorial constraints — tone, style guide, word count, publication platform requirements, SEO targets. If the audience is defined, the tone should be too.
+- **Feasibility**: Content that targets "everyone" usually resonates with no one. If audience is broad, push for primary audience vs. secondary.
+- **Rabbit holes**: Ensure "perfectionism in prose" is considered. Content projects often stall on endless revision.
+
+### Research Domain
+- **Success criteria**: Every criterion should specify what "enough research" looks like — number of sources, coverage thresholds, synthesis requirements. "Thorough research" is not a criterion.
+- **Constraints**: Check for missing methodological constraints — source quality requirements, recency cutoffs, access limitations, citation standards.
+- **Feasibility**: Research with no time boundary expands infinitely. Ensure the appetite includes a hard stop point, not just "when it's done."
+- **Core assumption**: Pay special attention here — research briefs often assume the answer exists and is findable. Challenge this assumption explicitly.
+
+### Strategy Domain
+- **Success criteria**: Ensure criteria include decision-quality metrics, not just deliverable completeness. "Strategy document is written" is a weak criterion. "Decision framework produces a clear ranking with documented trade-offs" is strong.
+- **Constraints**: Check for missing stakeholder constraints — who needs to approve, who needs to be consulted, what data is available vs. what's assumed.
+- **Feasibility**: Strategy work often assumes data availability. If a criterion requires data that doesn't exist yet, flag the dependency.
+- **Rabbit holes**: Ensure "analysis paralysis" and "over-modeling" are considered.
+
+### General Domain
+- No additional domain-specific checks. Apply the standard 3 core questions and additional checks.
+
 ## Constraints on You
 
 - Do NOT rewrite the brief yourself — identify gaps and let the user fix them

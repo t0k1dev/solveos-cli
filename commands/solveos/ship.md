@@ -46,18 +46,20 @@ For each criterion:
 
 ## Step 2: Define "Shipped"
 
-Based on the domain from `.solveos/config.json`, explain what "shipped" means:
+Based on the domain from `.solveos/config.json`, explain what "shipped" means and how to verify it:
 
-| Domain | What "Shipped" Means |
-|--------|---------------------|
-| `software` | Code is deployed or merged. It's accessible to the audience named in the brief. |
-| `content` | Content is published and publicly accessible to the target audience. |
-| `research` | Findings are shared with stakeholders. Conclusions are documented. |
-| `strategy` | Decision is communicated to stakeholders. Action plan is in place. |
-| `general` | The output is delivered to the intended audience in the intended format. |
+| Domain | What "Shipped" Means | Verification |
+|--------|---------------------|--------------|
+| `software` | Code is deployed or merged to the target branch. It's accessible to the audience named in the brief. | PR merged / deploy confirmed / feature flag enabled |
+| `content` | Content is published and publicly accessible to the target audience. | URL is live / post is published / document is shared |
+| `research` | Findings are shared with stakeholders. Conclusions are documented and accessible. | Report delivered / presentation given / document shared |
+| `strategy` | Decision is communicated to stakeholders. Action plan is in place with owners and timelines. | Decision email sent / meeting held / plan documented with next steps |
+| `general` | The output is delivered to the intended audience in the intended format. | Audience has received and can access the output |
 
 Ask the user:
-> "Based on your domain ({domain}), 'shipped' means: {definition}. Has this been done, or do you need to do it now?"
+> "Based on your domain ({domain}), 'shipped' means: {definition}.
+> Verification: {verification method}.
+> Has this been done, or do you need to do it now?"
 
 ## Step 3: Confirm Ship
 

@@ -152,6 +152,70 @@ Based on the aggregate diagnosis:
 - **Any Misunderstandings**: Return to Planning (clarify first, then rebuild)
 - **Mix of categories**: Return to Planning (the plan needs work; build errors will be fixed after the plan is corrected)
 
+## Domain-Specific Debugging Patterns
+
+Read the `domain` field from `.solveos/config.json` and apply domain-specific diagnostic patterns:
+
+### Software Domain
+
+**Common failure signals:**
+- Test failures with stack traces → usually **Build Error** (fix the code)
+- "Works on my machine" → usually **Plan Gap** (missing environment constraints)
+- Feature works but doesn't match reviewer expectations → usually **Misunderstanding** (ambiguous criterion)
+- Performance doesn't meet threshold → check if threshold was in plan. If yes: **Build Error**. If no: **Plan Gap**.
+
+**Diagnostic shortcuts:**
+- Run `git diff` against the pre-build state to see exactly what changed
+- Check test output for the specific assertion that failed
+- Compare the criterion's wording against the implementation — are they testing the same thing?
+
+**Fix patterns:**
+- Build errors: Specific code changes with file paths and line numbers
+- Plan gaps: Add measurable thresholds, specify edge cases, define technical terms
+- Misunderstandings: Replace ambiguous terms with concrete specifications
+
+### Content Domain
+
+**Common failure signals:**
+- "Doesn't match our voice" → usually **Plan Gap** (tone/style wasn't specified) or **Misunderstanding** (different interpretation of tone)
+- "Missing key information" → check if the information was in the brief. If yes: **Build Error**. If no: **Plan Gap**.
+- "Too long/too short" → check if word count was specified. If yes: **Build Error**. If no: **Plan Gap**.
+- Factual errors → **Build Error** (research was insufficient or sources were wrong)
+
+**Fix patterns:**
+- Build errors: Specific sections to rewrite with clear direction
+- Plan gaps: Add style guide references, word count targets, structural requirements
+- Misunderstandings: Provide example text that demonstrates the intended tone/style
+
+### Research Domain
+
+**Common failure signals:**
+- "Conclusions don't follow from findings" → usually **Build Error** (logical gap in synthesis)
+- "Didn't cover X" → check if X was in scope. If yes: **Build Error**. If no: **Plan Gap** (scope was under-specified).
+- "Sources aren't credible" → check if source quality was specified. If yes: **Build Error**. If no: **Plan Gap**.
+- Contradictory findings not acknowledged → **Build Error** (synthesis failure)
+
+**Fix patterns:**
+- Build errors: Identify specific logical gaps, missing sources, or unsupported conclusions
+- Plan gaps: Add source quality requirements, coverage thresholds, methodology constraints
+- Misunderstandings: Clarify what "enough research" means for this specific question
+
+### Strategy Domain
+
+**Common failure signals:**
+- "Doesn't address stakeholder X" → check if stakeholder was named in brief. If yes: **Build Error**. If no: **Plan Gap**.
+- "Recommendations aren't actionable" → usually **Build Error** (analysis didn't reach conclusions) or **Plan Gap** (brief didn't require actionable output)
+- "Missing data to support conclusion" → check if data requirements were specified. If yes: **Build Error**. If no: **Plan Gap**.
+- "Analysis is biased" → usually **Misunderstanding** (implicit assumptions differ between planner and builder)
+
+**Fix patterns:**
+- Build errors: Identify missing stakeholder perspectives, unsupported claims, logical gaps
+- Plan gaps: Add stakeholder mapping, evidence requirements, decision criteria
+- Misunderstandings: Make implicit assumptions explicit in the brief
+
+### General Domain
+- No domain-specific patterns. Use the standard 3-step diagnostic process.
+
 ## Constraints on You
 
 - **Diagnose before fixing** — never jump to a fix without categorizing the root cause first
