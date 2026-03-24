@@ -7,9 +7,10 @@
  */
 
 import { readFile, writeFile, mkdir, cp, rm, access, readdir } from "node:fs/promises";
-import { join, resolve, relative } from "node:path";
+import { join, resolve } from "node:path";
 import type { Config, CycleStateData, PlanBrief } from "../types.js";
 import { DEFAULT_CONFIG } from "./config.js";
+import { validatePath, sanitizeFilename } from "./security.js";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -34,21 +35,11 @@ const SUBDIRS = [
 
 /**
  * Resolve a path within .solveos/ and validate it doesn't escape.
- * Throws if the resolved path is outside the .solveos/ directory.
+ * Delegates to the security module's validatePath.
  */
 function safePath(projectDir: string, ...segments: string[]): string {
   const base = resolve(projectDir, SOLVEOS_DIR);
-  const target = resolve(base, ...segments);
-  const rel = relative(base, target);
-  if (rel.startsWith("..") || resolve(target) !== target.replace(/\/+$/, "")) {
-    // Extra check: the relative path must not escape the base
-    if (rel.startsWith("..")) {
-      throw new Error(
-        `Path traversal detected: "${segments.join("/")}" resolves outside .solveos/`,
-      );
-    }
-  }
-  return target;
+  return validatePath(base, join(...segments));
 }
 
 /**
@@ -447,10 +438,3 @@ export async function writeReview(
   await writeFile(filePath, content, "utf-8");
 }
 
-/**
- * Sanitize a string for use as a filename.
- * Allows alphanumeric, hyphens, underscores, and dots.
- */
-function sanitizeFilename(name: string): string {
-  return name.replace(/[^a-zA-Z0-9._-]/g, "-").toLowerCase();
-}
