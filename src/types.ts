@@ -106,6 +106,19 @@ export interface Config {
   auto_advance: boolean;
   domain: Domain;
   runtime: Runtime;
+  hooks: HookConfig;
+}
+
+/** Hook configuration — controls context monitor and brief anchor behavior. */
+export interface HookConfig {
+  /** Enable the context monitor plugin. */
+  context_monitor: boolean;
+  /** Message count threshold before warning (proxy for context usage). Default 60. */
+  context_monitor_threshold: number;
+  /** Enable the brief anchor plugin. */
+  brief_anchor: boolean;
+  /** Tool call interval between brief anchor reminders during Build. Default 10. */
+  brief_anchor_interval: number;
 }
 
 // ---------------------------------------------------------------------------

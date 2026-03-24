@@ -7,7 +7,7 @@
  * OpenCode conventions (from docs):
  * - Commands: .opencode/commands/{name}.md -> /name
  * - Agents:  .opencode/agents/{name}.md   -> @name
- * - Hooks:   Not yet supported via file convention (Phase 3)
+ * - Plugins: .opencode/plugins/{name}.ts  -> loaded at startup
  */
 
 import { mkdir, readdir, copyFile } from "node:fs/promises";
@@ -33,6 +33,17 @@ function toOpencodeCommandName(filename: string): string {
  * to OpenCode's convention (.opencode/agents/solveos-{name}.md).
  */
 function toOpencodeAgentName(filename: string): string {
+  return basename(filename);
+}
+
+/**
+ * Maps our hook files (src/hooks/*.ts compiled to dist/hooks/*.js)
+ * to OpenCode's plugin convention (.opencode/plugins/solveos-{name}.ts).
+ *
+ * Note: We copy the TypeScript source directly — OpenCode's plugin loader
+ * supports TypeScript files natively.
+ */
+function toOpencodePluginName(filename: string): string {
   return basename(filename);
 }
 
@@ -86,9 +97,21 @@ export const opencode: RuntimeAdapter = {
     }
   },
 
-  async installHooks(_sourceDir: string): Promise<void> {
-    // Hooks are Phase 3 — stub for now.
-    // OpenCode doesn't have a file-based hook convention yet;
-    // this will be implemented when hook support is added.
+  async installHooks(sourceDir: string): Promise<void> {
+    const cwd = process.cwd();
+    const targetDir = join(cwd, ".opencode", "plugins");
+    await mkdir(targetDir, { recursive: true });
+
+    // sourceDir is src/hooks/ — contains TypeScript plugin files.
+    // OpenCode's plugin loader supports TypeScript natively.
+    const files = await readdir(sourceDir);
+    for (const file of files) {
+      if (!file.endsWith(".ts")) continue;
+      const sourcePath = join(sourceDir, file);
+      const targetName = toOpencodePluginName(file);
+      // Prefix with solveos- to namespace our plugins
+      const targetPath = join(targetDir, `solveos-${targetName}`);
+      await copyFile(sourcePath, targetPath);
+    }
   },
 };

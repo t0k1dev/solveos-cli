@@ -22,4 +22,10 @@ export const DEFAULT_CONFIG: Config = {
   auto_advance: false,
   domain: "software",
   runtime: "auto",
+  hooks: {
+    context_monitor: true,
+    context_monitor_threshold: 60,
+    brief_anchor: true,
+    brief_anchor_interval: 10,
+  },
 };

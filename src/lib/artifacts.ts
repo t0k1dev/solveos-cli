@@ -130,7 +130,12 @@ export async function readConfig(projectDir: string): Promise<Config> {
   try {
     const raw = await readFile(configPath, "utf-8");
     const parsed = JSON.parse(raw) as Partial<Config>;
-    return { ...DEFAULT_CONFIG, ...parsed, gates: { ...DEFAULT_CONFIG.gates, ...parsed.gates } };
+    return {
+      ...DEFAULT_CONFIG,
+      ...parsed,
+      gates: { ...DEFAULT_CONFIG.gates, ...parsed.gates },
+      hooks: { ...DEFAULT_CONFIG.hooks, ...parsed.hooks },
+    };
   } catch {
     return { ...DEFAULT_CONFIG };
   }
