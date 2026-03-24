@@ -10,6 +10,7 @@
     "build": "tsc",
     "dev": "tsx",
     "test": "tsx --test tests/state-machine.test.ts tests/artifacts.test.ts tests/templates.test.ts tests/security.test.ts tests/wave-executor.test.ts tests/hooks.test.ts",
+    "test:coverage": "c8 --check-coverage --lines 70 --reporter text --reporter lcov tsx --test tests/state-machine.test.ts tests/artifacts.test.ts tests/templates.test.ts tests/security.test.ts tests/wave-executor.test.ts tests/hooks.test.ts",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build"
   },
@@ -37,6 +38,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "c8": "^11.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }
