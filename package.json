@@ -1,0 +1,42 @@
+{
+  "name": "solveos-cli",
+  "version": "0.0.0",
+  "description": "Install the solveOS problem-solving framework as slash commands, agents, and hooks into AI coding assistants",
+  "type": "module",
+  "bin": {
+    "solveos-cli": "dist/bin/install.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "engines": {
+    "node": ">= 20.0.0"
+  },
+  "files": [
+    "dist/",
+    "commands/",
+    "agents/",
+    "templates/"
+  ],
+  "keywords": [
+    "solveos",
+    "cli",
+    "ai",
+    "coding-assistant",
+    "framework",
+    "plan-brief",
+    "opencode",
+    "claude-code",
+    "cursor"
+  ],
+  "author": "t0k1dev",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

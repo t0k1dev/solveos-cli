@@ -1,0 +1,15 @@
+{
+  "mode": "interactive",
+  "gates": {
+    "research": true,
+    "plan_validation": true,
+    "build_validation": true,
+    "review_pre_ship": true,
+    "review_post_ship": true
+  },
+  "plan_validation_max_passes": 3,
+  "granularity": "standard",
+  "auto_advance": false,
+  "domain": "software",
+  "runtime": "auto"
+}
